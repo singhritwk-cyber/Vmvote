@@ -17,11 +17,11 @@ export default function VotePortal() {
   // Update iframe URL safely on the client side
   useEffect(() => {
     if (currentSite) {
-      // Generate absolute path based on origin to load correctly inside iframe
-      // Add simple version query parameter to avoid layout caching when user edits links
-      setIframeUrl(`${window.location.origin}${currentSite.path}?v=${Date.now()}`);
+      // Use query parameter instead of sub-path to load index.html safely on static hosts (e.g. GCS)
+      // and prevent NoSuchKey (404) errors inside the iframe.
+      setIframeUrl(`${window.location.origin}/?site=${currentSite.id}&v=${Date.now()}`);
     }
-  }, [activeIndex, currentSite?.path, voteSites]);
+  }, [activeIndex, currentSite?.id, voteSites]);
 
   const handleNext = () => {
     if (currentIndex < voteSites.length - 1) {
