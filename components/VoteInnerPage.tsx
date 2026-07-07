@@ -5,9 +5,10 @@ import { useServerSettings } from "../hooks/useServerSettings";
 
 interface VoteInnerPageProps {
   siteId: string;
+  inline?: boolean;
 }
 
-export default function VoteInnerPage({ siteId }: VoteInnerPageProps) {
+export default function VoteInnerPage({ siteId, inline = false }: VoteInnerPageProps) {
   const { settings } = useServerSettings();
   const voteSites = settings.voteSites || [];
   
@@ -16,7 +17,7 @@ export default function VoteInnerPage({ siteId }: VoteInnerPageProps) {
 
   if (!currentSite) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4 py-8" id="inner-page-not-found">
+      <div className="flex flex-col items-center justify-center h-full w-full bg-black text-white px-4 py-8" id="inner-page-not-found">
         <p className="text-neutral-500 font-mono text-sm">Voting site configuration not loaded yet.</p>
       </div>
     );
@@ -28,7 +29,7 @@ export default function VoteInnerPage({ siteId }: VoteInnerPageProps) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4 py-8 select-none" id={`vote-inner-page-${siteId}`}>
+    <div className={`flex flex-col items-center justify-center ${inline ? "h-full w-full px-4 py-6" : "min-h-screen px-4 py-8"} bg-black text-white select-none`} id={`vote-inner-page-${siteId}`}>
       <div className="max-w-md w-full text-center flex flex-col items-center gap-6" id="inner-content">
         {/* Site Title */}
         <h2 className="text-2xl md:text-3xl font-bold font-mono tracking-wide text-white" id="inner-site-title">

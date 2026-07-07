@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useServerSettings } from "../hooks/useServerSettings";
 import { Copy, Check } from "lucide-react";
+import VoteInnerPage from "./VoteInnerPage";
 
 export default function VotePortal() {
   const { settings } = useServerSettings();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [iframeUrl, setIframeUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
   const voteSites = settings.voteSites || [];
@@ -13,15 +13,6 @@ export default function VotePortal() {
   // Safe bounds check
   const activeIndex = Math.min(currentIndex, Math.max(0, voteSites.length - 1));
   const currentSite = voteSites[activeIndex];
-
-  // Update iframe URL safely on the client side
-  useEffect(() => {
-    if (currentSite) {
-      // Use query parameter instead of sub-path to load index.html safely on static hosts (e.g. GCS)
-      // and prevent NoSuchKey (404) errors inside the iframe.
-      setIframeUrl(`${window.location.origin}/?site=${currentSite.id}&v=${Date.now()}`);
-    }
-  }, [activeIndex, currentSite?.id, voteSites]);
 
   const handleNext = () => {
     if (currentIndex < voteSites.length - 1) {
@@ -55,17 +46,10 @@ export default function VotePortal() {
 
   return (
     <div className="flex flex-col items-center gap-6 w-full max-w-4xl px-4 py-4 select-none" id="vote-portal">
-      {/* Centered Iframe container */}
+      {/* Centered Site content container (rendering VoteInnerPage directly without an iframe) */}
       <div className="w-full aspect-[4/3] max-h-[380px] md:max-h-[420px] bg-black border border-neutral-800 rounded-[8px] overflow-hidden shadow-inner relative" id="iframe-container">
-        {iframeUrl && currentSite ? (
-          <iframe
-            src={iframeUrl}
-            title={`Vote Site Portal - ${currentSite.name}`}
-            className="w-full h-full border-none"
-            sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-            id="vote-iframe"
-            key={iframeUrl} // Force re-render of iframe when URL changes
-          />
+        {currentSite ? (
+          <VoteInnerPage siteId={currentSite.id} inline={true} />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-neutral-500 font-mono text-sm" id="iframe-loading">
             Loading Portal...
