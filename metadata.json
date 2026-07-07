@@ -1,0 +1,6 @@
+{
+  "name": "VISIBLE MC",
+  "description": "A clean, modern voting portal and website for the VISIBLE MC Minecraft server.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
